@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Explorer Portfolio</title>
+    <style>
+        /* Modern Design System Tokens */
+        :root {
+            --primary: #1e40af;       /* Deep blue brand color */
+            --primary-light: #eff6ff; /* Soft blue background accent */
+            --accent: #3b82f6;        /* Vibrant link color */
+            --dark-text: #111827;     /* High-contrast charcoal text */
+            --light-text: #4b5563;    /* Muted body text */
+            --border-color: #e5e7eb;  /* Clean dividers */
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .portfolio-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0f172a 100%);
+            color: #ffffff;
+            padding: 45px 40px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 3px solid #ffffff;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-main h1 {
+            margin: 0 0 8px 0;
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .header-main .subtitle {
+            font-size: 16px;
+            color: #93c5fd;
+            font-weight: 500;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explorer-badge {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .full-width-footer {
+            grid-column: span 2;
+            margin-top: 20px;
+            border-top: 2px dashed var(--border-color);
+            padding-top: 30px;
+        }
+
+        h2 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--dark-text);
+            margin: 0 0 20px 0;
+            padding-bottom: 6px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        section {
+            margin-bottom: 35px;
+        }
+
+        p, li {
+            font-size: 14px;
+            color: var(--light-text);
+            line-height: 1.6;
+            margin-top: 0;
+        }
+
+        .interactive-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .interactive-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        /* Simplified Certifications List */
+        .cert-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cert-list li {
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--light-text);
+        }
+
+        /* Skill Tag Pill Design */
+        .pill-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0;
+            list-style: none;
+            margin: 0;
+        }
+
+        .pill-box li {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid #bfdbfe;
+            margin: 0;
+        }
+
+        /* Timeline entries for jobs */
+        .timeline-entry {
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .timeline-entry::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+
+        .entry-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--dark-text);
+            margin: 0;
+        }
+
+        .entry-meta {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--light-text);
+            margin: 2px 0 12px 0;
+        }
+
+        .date-tag {
+            font-size: 11.5px;
+            font-weight: 600;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        /* Nested Project Styles */
+        .project-block {
+            margin-top: 15px;
+            margin-left: 10px;
+            padding-left: 15px;
+            border-left: 2px dotted #cbd5e1;
+        }
+
+        .project-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--dark-text);
+            margin: 0 0 4px 0;
+        }
+
+        .project-date {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .project-block ul {
+            padding-left: 18px;
+            margin-bottom: 12px;
+        }
+
+        /* Project Cards Display System (Bottom Grid) */
+        .project-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .project-card {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: #bfdbfe;
+        }
+
+        .project-card h3 {
+            margin: 0 0 6px 0;
+            font-size: 16px;
+            color: var(--dark-text);
+        }
+
+        .project-card .tech-stack {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 20px;
+            }
+            .full-width-footer { grid-column: span 1; }
+            .project-cards-grid { grid-template-columns: 1fr; }
+            header {
+                flex-direction: column;
+                text-align: center;
+                padding: 35px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="portfolio-container">
+
+    <header>
+        <div class="profile-avatar">
+            <img src="myID.png" alt="Profile Picture">
+        </div>
+        <div class="header-main">
+            <h1>SALVE POLINAR</h1>
+            <p class="subtitle">
+                Quality Engineer 
+                <span class="explorer-badge">✨ Technology Explorer</span>
+            </p>
+        </div>
+    </header>
+
+    <div class="content-grid">
+        
+        <aside>
+            <section>
+                <h2>Connect</h2>
+                <p>📍 Philippines</p>
+                <p>✉️ <a href="mailto:salve.q.polinar@outlook.com" class="interactive-link">salve.q.polinar@outlook.com</a></p>
+                <p>🐙 <a href="https://github.com/Veri-ai" target="_blank" class="interactive-link">https://github.com/Veri-ai</a></p>
+                <p>💼 <a href="https://www.linkedin.com/in/salvepolinar" target="_blank" class="interactive-link">linkedin.com/in/salvepolinar</a></p>
+            </section>
+
+            <section>
+                <h2>Certificates</h2>
+                <ul class="cert-list">
+		    <li>🏆 <a href="https://skillsoft.digitalbadges.skillsoft.com/profile/salvepolinar273650/wallet" target="_blank" class="interactive-link">Credentials</a></li>
+                    <li>🏆 <a href="https://learn.deeplearning.ai/accomplishments/d0ee6fc7-d005-45dc-9a29-f8963ad3ca49" target="_blank" class="interactive-link">DeepLearning.AI</a></li>
+                    <li>🏆 <a href="https://testautomationu.applitools.com/certificate/?id=11f2e51d" target="_blank" class="interactive-link">Test Automation University</a></li>
+                    <li>🏆 <a href="https://www.credly.com/badges/ffc96165-9f32-48b8-86c5-2eef09262d5c/public_url" target="_blank" class="interactive-link">Google</a></li>
+                    <li>🏆 <a href="https://www.credly.com/badges/8a657128-a9a8-4082-8b6b-28ea71fb1c1a/public_url" target="_blank" class="interactive-link">Accenture</a></li>
+                </ul>
+            </section>
+
+<section>
+    <h2>Core Expertise</h2>
+    
+    <p style="font-weight: 700; margin: 10px 0 5px 0; font-size: 13px; color: var(--dark-text);">Testing & Domains</p>
+    <ul class="pill-box">
+        <li>Manual & Functional</li>
+        <li>Regression & UAT</li>
+        <li>SIT & E2E Testing</li>
+        <li>Localization</li>
+        <li>Mobile (iOS & Android)</li>
+        <li>Web & Web-Mobile</li>
+        <li>Conversational AI</li>
+        <li>Connected Devices</li>
+        <li>Smart Metering / Utilities</li>
+    </ul>
+
+    <p style="font-weight: 700; margin: 15px 0 5px 0; font-size: 13px; color: var(--dark-text);">Tools & Automation</p>
+    <ul class="pill-box">
+        <li>Selenium</li>
+        <li>Python (Basic)</li>
+        <li>SQL DB Querying</li>
+        <li>AWS</li>
+        <li>Jira</li>
+        <li>Kafka</li>
+        <li>CMD Automation</li>
+    </ul>
+
+    <p style="font-weight: 700; margin: 15px 0 5px 0; font-size: 13px; color: var(--dark-text);">Process & Delivery</p>
+    <ul class="pill-box">
+        <li>Test Design & Scope</li>
+        <li>Defect Tracking</li>
+        <li>Defect Verification</li>
+        <li>Agile Environments</li>
+        <li>Cross-Team Coordination</li>
+        <li>PVT Execution</li>
+    </ul>
+</section>
+            <section>
+                <h2>Education</h2>
+                <p style="font-weight: 700; margin: 0; color: var(--dark-text);">Bachelor of Science in Computer Science</p>
+                <p style="margin: 2px 0; font-size: 13px;">Pangasinan State University – Lingayen Philippines – June 2018</p>
+          </p>
+            </section>
+        </aside>
+
+        <main>
+            <section>
+                <h2>Profile Summary</h2>
+                <p>
+                    Quality Engineering Analyst with 6 years testing flagship products for a global tech leader, plus recent specialized contract experience in conversational AI and utility streaming data. Versatile QA professional experienced in executing mixed E2E, functional, integration, and UAT strategies across web, mobile, and smart TV environments.
+
+                </p>
+            </section>
+
+            <section>
+                <h2>Professional Experience</h2>
+
+                <div class="timeline-entry">
+                    <span class="date-tag">2020 - Present (6 Years)</span>
+                    <p class="entry-title">Accenture (ACN)</p>
+                    <p class="entry-meta">Quality Engineering Analyst</p>
+                    
+                    <div class="project-block">
+                        <p class="project-title">💼 Utility Technology - SIT | E2E | UAT | Industry Testing (Enhancement Project)</p>
+                        <div class="project-date">February 2026 - Current</div>
+                        <ul>
+                            <li>Performed System Integration Testing (SIT), End-to-End (E2E), User Acceptance Testing (UAT), and Industry Testing for smart metering and utility systems supporting AU and NZ operations.</li>			 
+                        </ul>
+                    </div>
+
+                    <div class="project-block">
+                        <p class="project-title">💼 Conversational AI – TELCO Platform (Enhancement Project)</p>
+                        <div class="project-date">June 2025 – January 2026</div>
+                        <ul>
+                            <li>Conducted functional and regression testing for Conversational AI in TELCO environments.</li>
+                            <li>Validated conversational flows, intent recognition, and response accuracy across platforms</li>
+			    <li>Collaborated with developers and AI specialists to identify and resolve defects.</li>
+			    <li>Documented AI behavior issues to align with business and user requirements.</li>			 
+                        </ul>
+                    </div>
+
+                    <div class="project-block">
+                        <p class="project-title">💼 Connected Device Ecosystems – UAT & Regression Testing</p>
+                        <div class="project-date">July 2023 – June 2025</div>
+                        <ul>
+                            <li>Performed UAT, regression, and integration testing for media apps on connected device ecosystems (e.g., casting & streaming platforms).</li>
+                            <li>Validated Android/iOS device integrations and cross-device functionality for 20+ applications.</li>
+			    <li>Identified defects impacting platform stability and user experience across firmware versions.</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-block">
+                        <p class="project-title">💼 Localization Platforms – Manual, Automation & Integration Testing</p>
+                        <div class="project-date">March 2020 – July 2023</div>
+                        <ul>
+                            <li>Executed manual and automated testing for localization workflows on a major global online platform across 80 languages.</li>
+			    <li>Applied Selenium automation and performed integration testing across web, mobile, and web-mobile platforms.</li>
+			    <li>Validated system behavior on multiple browsers and devices, ensuring high availability and performance.</li>
+			    <li>Collaborated with cross-functional teams to support rapid releases and deployment</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-entry">
+                    <span class="date-tag">August 2018 - July 2019</span>
+                    <p class="entry-title">TRANSCOM WORLDWIDE - Philippines</p>
+                    <p class="entry-meta">Customer Service and Billing / Collection Representative</p>
+                    <ul>
+                        <li>Customer service, billing support, account handling, and issue resolution for telecom customers.</li>
+                        <li>Skilled in communication, problem-solving, billing inquiries, payment processing, and customer account management.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <div class="full-width-footer">
+            <section>
+                <h2>Featured Projects & Tech Explorations</h2>
+                <p style="margin-bottom: 20px;">
+                    A collection of labs, sandboxes, and repository deployments built while exploring modern technologies and system frameworks.
+                </p>
+                
+                <div class="project-cards-grid">
+                    <div class="project-card">
+                        <h3>📁 Discover the World of Shapes (In Progress)</h3>
+                        <div class="tech-stack">Html, CSS, javascript</div>
+                        <p>
+			<ul>
+			   <li>Developing an interactive web application that visualizes and explores geometric shapes.</li>
+			   <li>Currently implementing features for shape transformations, color variations, and user‑driven exploration.</li>
+			   <li>Hosted on GitHub Pages for live testing and iteration.</li>
+			</p>
+			</ul>
+                        <a href="https://github.com/Veri-ai" target="_blank" class="interactive-link">📂 Explore Repository</a>&nbsp;&nbsp;&nbsp;
+			<a href="https://veri-ai.github.io/Explore-Shape/"target="_blank" class="interactive-link"> 🌐View Page</a>
+                    </div>
+
+                    <div class="project-card">
+                        <h3>📁 API Testing Playground</h3>
+                        <div class="tech-stack">[e.g., HTML5 / CSS Grid]</div>
+                        <p>A demo project showcasing automated API testing with Postman and Node.js.
+
+			- Validates responses from public APIs (e.g., GitHub API)
+			- Includes automated assertions for status codes and response fields
+			- Demonstrates both code-based testing (`apiTest.js`) and tool-based testing (Postman collection)
+			- Provides reproducible test results with screenshots and exported collections
+</p>
+                        <a href="#" target="_blank" class="interactive-link">📁Explore Repository</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
